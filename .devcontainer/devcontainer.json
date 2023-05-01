@@ -1,0 +1,5 @@
+// https://github.com/devcontainers/templates/tree/main/src/go
+{
+	"name": "Docker Public IP Poll",
+	"image": "mcr.microsoft.com/devcontainers/go:0-1-bullseye"
+}
