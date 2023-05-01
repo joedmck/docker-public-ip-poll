@@ -13,7 +13,7 @@ Variable Name | Default Value
 INTERVAL | 1m
 ENDPOINT | https://checkip.amazonaws.com
 
-## Getting Started
+## Getting Started Examples
 
 With standard configuration:
 ```bash
