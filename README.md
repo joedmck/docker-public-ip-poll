@@ -15,6 +15,17 @@ ENDPOINT | https://checkip.amazonaws.com
 
 ## Getting Started
 
+With standard configuration:
 ```bash
 docker run ghcr.io/joedmck/docker-public-ip-poll:main
+```
+
+Changing interval:
+```bash
+docker run -e INTERVAL="5s" ghcr.io/joedmck/docker-public-ip-poll:main
+```
+
+Changing endpoint:
+```bash
+docker run -e ENDPOINT="https://api64.ipify.org/" ghcr.io/joedmck/docker-public-ip-poll:main
 ```

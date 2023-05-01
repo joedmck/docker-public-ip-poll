@@ -17,6 +17,8 @@ func main() {
 	endpointStr := os.Getenv("ENDPOINT")
 	if endpointStr == "" {
 		endpointStr = "https://checkip.amazonaws.com"
+		// endpointStr = "https://ifconfig.me/ip"
+		// endpointStr = "https://api64.ipify.org/"
 	}
 
 	interval, err := time.ParseDuration(intervalStr)
@@ -34,6 +36,9 @@ func main() {
 			if err != nil {
 				fmt.Fprintln(os.Stderr, "ERROR: Failed to read response body: ", err)
 			} else {
+				if len(body) > 0 && body[len(body)-1] != '\n' {
+					body = append(body, '\n')
+				}
 				timestamp := time.Now().Format(time.RFC3339)
 				bodyWithTimestamp := fmt.Sprintf("%s: %s", timestamp, string(body))
 				fmt.Print(bodyWithTimestamp)
