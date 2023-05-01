@@ -17,8 +17,6 @@ func main() {
 	endpointStr := os.Getenv("ENDPOINT")
 	if endpointStr == "" {
 		endpointStr = "https://checkip.amazonaws.com"
-		// endpointStr = "https://ifconfig.me/ip"
-		// endpointStr = "https://api64.ipify.org/"
 	}
 
 	interval, err := time.ParseDuration(intervalStr)
