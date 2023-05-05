@@ -36,6 +36,7 @@ func main() {
 	for {
 		resp, err := client.Get(endpointStr)
 		if err != nil {
+			log(os.Stderr, "ERROR - Failed to make HTTP request.")
 		} else {
 			if resp.StatusCode != 200 {
 				log(os.Stderr, fmt.Sprintf("ERROR - HTTP request returned status code %d\n", resp.StatusCode))
