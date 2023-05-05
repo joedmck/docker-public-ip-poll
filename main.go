@@ -8,42 +8,47 @@ import (
 	"time"
 )
 
-func main() {
-	intervalStr := os.Getenv("INTERVAL")
-	if intervalStr == "" {
-		intervalStr = "1m"
-	}
+func log(writer io.Writer, msg string) {
+	timestamp := time.Now().Format(time.RFC3339)
+	withTimestamp := fmt.Sprintf("%s: %s", timestamp, msg)
+	fmt.Fprint(writer, withTimestamp)
+}
 
+func main() {
 	endpointStr := os.Getenv("ENDPOINT")
 	if endpointStr == "" {
 		endpointStr = "https://checkip.amazonaws.com"
 	}
 
+	intervalStr := os.Getenv("INTERVAL")
+	if intervalStr == "" {
+		intervalStr = "1m"
+	}
 	interval, err := time.ParseDuration(intervalStr)
 	if err != nil {
-		fmt.Println("Error parsing interval value:", err)
+		log(os.Stderr, fmt.Sprintf("ERROR - Failed to parse interval value %s\n", intervalStr))
 		return
 	}
 
 	client := http.Client{
 		Timeout: 5 * time.Second,
 	}
-
 	for {
 		resp, err := client.Get(endpointStr)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "ERROR: HTTP response status code: %d", resp.StatusCode)
 		} else {
-			body, err := io.ReadAll(resp.Body)
-			if err != nil {
-				fmt.Fprintln(os.Stderr, "ERROR: Failed to read response body: ", err)
+			if resp.StatusCode != 200 {
+				log(os.Stderr, fmt.Sprintf("ERROR - HTTP request returned status code %d\n", resp.StatusCode))
 			} else {
-				if len(body) > 0 && body[len(body)-1] != '\n' {
-					body = append(body, '\n')
+				body, err := io.ReadAll(resp.Body)
+				if err != nil {
+					log(os.Stderr, "ERROR - Failed to read response body.\n")
+				} else {
+					if len(body) > 0 && body[len(body)-1] != '\n' {
+						body = append(body, '\n')
+					}
+					log(os.Stdout, string(body))
 				}
-				timestamp := time.Now().Format(time.RFC3339)
-				bodyWithTimestamp := fmt.Sprintf("%s: %s", timestamp, string(body))
-				fmt.Print(bodyWithTimestamp)
 			}
 			resp.Body.Close()
 		}
