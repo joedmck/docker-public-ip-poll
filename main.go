@@ -25,8 +25,12 @@ func main() {
 		return
 	}
 
+	client := http.Client{
+		Timeout: 5 * time.Second,
+	}
+
 	for {
-		resp, err := http.Get(endpointStr)
+		resp, err := client.Get(endpointStr)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "ERROR: HTTP response status code: %d", resp.StatusCode)
 		} else {
