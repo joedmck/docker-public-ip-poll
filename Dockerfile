@@ -5,9 +5,9 @@ COPY go.mod .
 COPY main.go .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o ipcheck .
 
-FROM alpine:latest
+FROM scratch
 
-WORKDIR /app
-COPY --from=build /app/ipcheck .
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=build /app/ipcheck /
 
-CMD ["./ipcheck"]
+ENTRYPOINT ["/ipcheck"]
